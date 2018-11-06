@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Steven Blom",
+      "authorEmail": "atomicblom@binaryvibrance.net",
+      "authorUrl": "http://github.com/AtomicBlom"
+    }
+  }
+}
