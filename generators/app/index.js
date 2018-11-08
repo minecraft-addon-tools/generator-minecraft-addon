@@ -24,22 +24,22 @@ module.exports = class extends Generator {
         type: 'input',
         name: 'addonNamespace',
         message: 'What namespace will you use?',
-        default: response => response.addonName.toLowerCase().replace(/[^a-zA-Z_]/g, '')
+        default: response => response.addonName.toLowerCase().replace(/[^a-z0-9_]/g, '')
       },
       {
         type: 'checkbox',
         name: 'addonModules',
         message: 'What kind of modules will make up the addon?',
-        choices: ['behavior', 'resources']
+        choices: ['Behaviors', 'Resources']
       },
       {
         type: 'confirm',
         name: 'hasScripts',
         message: 'Will you be adding scripts?',
-        when: response => response.addonModules.find(r => r === 'behavior')
+        when: response => response.addonModules.find(r => r === 'Behaviors')
       },
       {
-        type: 'choice',
+        type: 'checkbox',
         name: 'scriptLanguage',
         message: 'What language do you want to script in?',
         when: response => response.hasScripts,
@@ -49,6 +49,9 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    this.log(JSON.stringify(this.props));
+    this.destinationRoot(this.props.addonName.replace(/[^a-zA-Z0-9_]/g, ''));
+
     const basePkgJson = {
       name: this.props.addonNamespace,
       private: 'true',
@@ -66,21 +69,19 @@ module.exports = class extends Generator {
     this.fs.extendJSON(this.destinationPath('package.json'), basePkgJson);
 
     let resourcePack;
-    if (this.props.addonModules.find(r => r === 'resources')) {
+    if (this.props.addonModules.find(r => r === 'Resources')) {
       resourcePack = this._createResourcePack();
     }
 
-    if (this.props.addonModules.find(r => r === 'behaviour')) {
+    if (this.props.addonModules.find(r => r === 'Behaviors')) {
       this._createBehaviourPack(resourcePack);
     }
 
     if (this.props.hasScripts) {
-      switch (this.props.scriptLanguage) {
-        case 'TypeScript':
-          this._extendForTypeScript();
-          return;
-        default:
-          this._extendForJavaScript();
+      if (this.props.scriptLanguage.find(r => r === 'TypeScript')) {
+        this._extendForTypeScript();
+      } else {
+        this._extendForJavaScript();
       }
     }
   }
@@ -179,6 +180,9 @@ module.exports = class extends Generator {
   }
 
   install() {
-    this.installDependencies();
+    this.installDependencies({
+      npm: true,
+      bower: false
+    });
   }
 };
