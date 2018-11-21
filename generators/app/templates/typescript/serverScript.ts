@@ -1,4 +1,4 @@
-namespace Client {
+namespace Server {
     var serverSystem = server.registerSystem(0, 0);
 
     // Setup which events to listen for
