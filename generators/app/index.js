@@ -98,15 +98,15 @@ module.exports = class extends Generator {
       header: {
         name: this.props.addonName,
         description: this.props.addonDescription,
-        uuid: uuid.v4(),
-        version: [1, 0, 0]
+        uuid: resourcesPack.uuid,
+        version: resourcesPack.version
       },
       modules: [
         {
           description: `Resources for ${this.props.addonName}`,
           type: 'resources',
-          uuid: resourcesPack.uuid,
-          version: resourcesPack.version
+          uuid: uuid.v4(),
+          version: [1, 0, 0]
         }
       ]
     };
@@ -161,9 +161,8 @@ module.exports = class extends Generator {
     this.fs.extendJSON(this.destinationPath('package.json'), typeScriptPkgAdditions);
 
     this.fs.copy(this.templatePath('typescript', 'clientScript.ts'), this.destinationPath('src', 'scripts', 'client', 'client.ts'));
-
     this.fs.copy(this.templatePath('typescript', 'serverScript.ts'), this.destinationPath('src', 'scripts', 'server', 'server.ts'));
-
+    this.fs.copy(this.templatePath('typescript', 'tsconfig.json'), this.destinationPath('tsconfig.json'));
     this.fs.copyTpl(this.templatePath('typescript', 'gulpfile.js'), this.destinationPath('gulpfile.js'), {
       addonName: this.props.addonName
     });
@@ -171,9 +170,7 @@ module.exports = class extends Generator {
 
   _extendForJavaScript() {
     this.fs.copy(this.templatePath('javascript', 'clientScript.js'), this.destinationPath('src', 'scripts', 'client', 'client.js'));
-
     this.fs.copy(this.templatePath('javascript', 'serverScript.js'), this.destinationPath('src', 'scripts', 'server', 'server.js'));
-
     this.fs.copyTpl(this.templatePath('javascript', 'gulpfile.js'), this.destinationPath('gulpfile.js'), {
       addonName: this.props.addonName
     });
