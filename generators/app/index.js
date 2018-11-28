@@ -7,7 +7,7 @@ const uuid = require('uuid');
 module.exports = class extends Generator {
   async prompting() {
     // Have Yeoman greet the user.
-    this.log(yosay(`So I heard you'd like to create an addon using ${chalk.red('generator-minecraft-addon')}?`));
+    this.log(yosay(`So I heard you'd like to create a ${chalk.red('minecraft-addon')}?`));
 
     this.props = await this.prompt([
       {
@@ -62,7 +62,7 @@ module.exports = class extends Generator {
         uninstallmod: 'gulp uninstall'
       },
       devDependencies: {
-        'minecraft-scripting-toolchain': 'github:minecraft-addon-tools/minecraft-scripting-toolchain'
+        'minecraft-scripting-toolchain': '^0.1.0'
       }
     };
 
