@@ -1,8 +1,13 @@
 {
   "name": "generator-minecraft-addon",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Generate minecraft bedrock edition addons",
-  "homepage": "http://github.com/minecraft-scripting-tools/generator-minecraft-addon",
+  "homepage": "http://github.com/minecraft-scripting-tools/generator-minecraft-addon#readme",
+  "repository": "github:minecraft-scripting-tools/generator-minecraft-addon",
+  "bugs": {
+    "url": "https://github.com/minecraft-addon-tools/generator-minecraft-addon/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "Steven Blom",
     "email": "atomicblom@binaryvibrance.net",
@@ -80,7 +85,5 @@
     "pretest": "eslint .",
     "precommit": "lint-staged",
     "test": "jest"
-  },
-  "repository": "minecraft-scripting-tools/generator-minecraft-addon",
-  "license": "MIT"
+  }
 }
