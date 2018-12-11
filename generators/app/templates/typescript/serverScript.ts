@@ -1,3 +1,4 @@
+/// <reference types="minecraft-scripting-types-server" />
 namespace Server {
     var serverSystem = server.registerSystem(0, 0);
 

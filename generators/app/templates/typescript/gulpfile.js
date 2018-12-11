@@ -5,10 +5,7 @@ const builder = new ModBuilder("<%= addonName %>");
 builder.scriptTasks = [
     () => ts({
         module: "ES6",
-        noImplicitAny: true,
-        types: [
-            "minecraft-scripting-types"
-        ]
+        noImplicitAny: true
     })
 ];
 module.exports = builder.configureEverythingForMe();

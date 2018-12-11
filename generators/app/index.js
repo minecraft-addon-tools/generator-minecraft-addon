@@ -151,7 +151,8 @@ module.exports = class extends Generator {
   _extendForTypeScript() {
     const typeScriptPkgAdditions = {
       devDependencies: {
-        'minecraft-scripting-types': 'github:minecraft-addon-tools/minecraft-scripting-types',
+        'minecraft-scripting-types-client': '^0.2.0',
+        'minecraft-scripting-types-server': '^0.2.0',
         // eslint-disable-next-line prettier/prettier
         'typescript': '^3.1.3',
         'gulp-typescript': '^5.0.0-alpha.3'

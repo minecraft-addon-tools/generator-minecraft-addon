@@ -1,3 +1,4 @@
+/// <reference types="minecraft-scripting-types-client" />
 namespace Client {
     const system = client.registerSystem(0, 0);
 
