@@ -54,7 +54,7 @@ module.exports = class extends Generator {
 
     const basePkgJson = {
       name: this.props.addonNamespace,
-      private: 'true',
+      private: true,
       scripts: {
         build: 'gulp build',
         watch: 'gulp watch',
