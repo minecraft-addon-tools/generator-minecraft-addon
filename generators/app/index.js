@@ -2,7 +2,7 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
-const uuid = require('uuid');
+const uuidv4 = require('uuid/v4');
 
 module.exports = class extends Generator {
   async prompting() {
@@ -88,7 +88,7 @@ module.exports = class extends Generator {
 
   _createResourcePack() {
     const resourcesPack = {
-      uuid: uuid.v4(),
+      uuid: uuidv4(),
       version: [1, 0, 0]
     };
 
@@ -105,7 +105,7 @@ module.exports = class extends Generator {
         {
           description: `Resources for ${this.props.addonName}`,
           type: 'resources',
-          uuid: uuid.v4(),
+          uuid: uuidv4(),
           version: [1, 0, 0]
         }
       ]
@@ -122,14 +122,14 @@ module.exports = class extends Generator {
       header: {
         name: this.props.addonName,
         description: this.props.addonDescription,
-        uuid: uuid.v4(),
+        uuid: uuidv4(),
         version: [1, 0, 0]
       },
       modules: [
         {
           description: `behaviours for ${this.props.addonName}`,
           type: 'client_data',
-          uuid: uuid.v4(),
+          uuid: uuidv4(),
           version: [1, 0, 0]
         }
       ]
