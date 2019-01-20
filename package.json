@@ -1,6 +1,6 @@
 {
   "name": "generator-minecraft-addon",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Generate minecraft bedrock edition addons",
   "homepage": "http://github.com/minecraft-scripting-tools/generator-minecraft-addon#readme",
   "repository": "github:minecraft-scripting-tools/generator-minecraft-addon",
@@ -72,7 +72,7 @@
       "prettier/prettier": [
         "error",
         {
-          "singleQuote": true,
+          "singleQuote": false,
           "printWidth": 160
         }
       ]

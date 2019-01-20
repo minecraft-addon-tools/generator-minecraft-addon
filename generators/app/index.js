@@ -1,84 +1,88 @@
-'use strict';
-const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
-const uuidv4 = require('uuid/v4');
+"use strict";
+const Generator = require("yeoman-generator");
+const chalk = require("chalk");
+const yosay = require("yosay");
+const uuidv4 = require("uuid/v4");
 
+const toolchainVersion = "^1.0.0-alpha.3";
+const toolchainTypeScriptVersion = "^1.0.0-alpha.3";
+const toolchainBrowserifyVersion = "^1.0.0-alpha.3";
+const typescriptTypesVersion = "^0.2.0";
 module.exports = class extends Generator {
   async prompting() {
     // Have Yeoman greet the user.
-    this.log(yosay(`So I heard you'd like to create a ${chalk.red('minecraft-addon')}?`));
+    this.log(yosay(`So I heard you'd like to create a ${chalk.red("Minecraft Addon")}?`));
 
     this.props = await this.prompt([
       {
-        type: 'input',
-        name: 'addonName',
-        message: 'What will be the name of your addon?'
+        type: "input",
+        name: "addonName",
+        message: "What will be the name of your addon?"
       },
       {
-        type: 'input',
-        name: 'addonDescription',
-        message: 'What will your addon do or provide?'
+        type: "input",
+        name: "addonDescription",
+        message: "What will your addon do or provide?"
       },
       {
-        type: 'input',
-        name: 'addonNamespace',
-        message: 'What namespace will you use?',
-        default: response => response.addonName.toLowerCase().replace(/[^a-z0-9_]/g, '')
+        type: "input",
+        name: "addonNamespace",
+        message: "What namespace will you use?",
+        default: response => response.addonName.toLowerCase().replace(/[^a-z0-9_]/g, "")
       },
       {
-        type: 'checkbox',
-        name: 'addonModules',
-        message: 'What kind of modules will make up the addon?',
-        choices: ['Behaviors', 'Resources']
+        type: "checkbox",
+        name: "addonModules",
+        message: "What kind of modules will make up the addon?",
+        choices: ["Behaviors", "Resources"]
       },
       {
-        type: 'confirm',
-        name: 'hasScripts',
-        message: 'Will you be adding scripts?',
-        when: response => response.addonModules.find(r => r === 'Behaviors')
+        type: "confirm",
+        name: "hasScripts",
+        message: "Will you be adding scripts?",
+        when: response => response.addonModules.find(r => r === "Behaviors")
       },
       {
-        type: 'checkbox',
-        name: 'scriptLanguage',
-        message: 'What language do you want to script in?',
+        type: "checkbox",
+        name: "scriptLanguage",
+        message: "What language do you want to script in?",
         when: response => response.hasScripts,
-        choices: ['JavaScript', 'TypeScript']
+        choices: ["JavaScript", "TypeScript"]
       }
     ]);
   }
 
   writing() {
-    this.log(JSON.stringify(this.props));
-    this.destinationRoot(this.props.addonName.replace(/[^a-zA-Z0-9_]/g, ''));
+    this.destinationRoot(this.props.addonName.replace(/[^a-zA-Z0-9_]/g, ""));
 
     const basePkgJson = {
       name: this.props.addonNamespace,
       private: true,
       scripts: {
-        build: 'gulp build',
-        watch: 'gulp watch',
-        installmod: 'gulp install',
-        uninstallmod: 'gulp uninstall'
+        build: "gulp build",
+        watch: "gulp watch",
+        installaddon: "gulp install",
+        uninstalladdon: "gulp uninstall"
       },
       devDependencies: {
-        'minecraft-scripting-toolchain': '^0.1.0'
+        "minecraft-addon-toolchain": toolchainVersion,
+        "minecraft-addon-toolchain-browserify": toolchainBrowserifyVersion
       }
     };
 
-    this.fs.extendJSON(this.destinationPath('package.json'), basePkgJson);
+    this.fs.extendJSON(this.destinationPath("package.json"), basePkgJson);
 
     let resourcePack;
-    if (this.props.addonModules.find(r => r === 'Resources')) {
+    if (this.props.addonModules.find(r => r === "Resources")) {
       resourcePack = this._createResourcePack();
     }
 
-    if (this.props.addonModules.find(r => r === 'Behaviors')) {
+    if (this.props.addonModules.find(r => r === "Behaviors")) {
       this._createBehaviourPack(resourcePack);
     }
 
     if (this.props.hasScripts) {
-      if (this.props.scriptLanguage.find(r => r === 'TypeScript')) {
+      if (this.props.scriptLanguage.find(r => r === "TypeScript")) {
         this._extendForTypeScript();
       } else {
         this._extendForJavaScript();
@@ -96,7 +100,7 @@ module.exports = class extends Generator {
       // eslint-disable-next-line camelcase
       format_version: 1,
       header: {
-        name: this.props.addonName,
+        name: `${this.props.addonName} Resources`,
         description: this.props.addonDescription,
         uuid: resourcesPack.uuid,
         version: resourcesPack.version
@@ -104,14 +108,15 @@ module.exports = class extends Generator {
       modules: [
         {
           description: `Resources for ${this.props.addonName}`,
-          type: 'resources',
+          type: "resources",
           uuid: uuidv4(),
           version: [1, 0, 0]
         }
       ]
     };
-    this.fs.extendJSON(this.destinationPath('src', 'resources', 'manifest.json'), resourceManifest);
-    this.fs.copy(this.templatePath('resource_pack_icon.png'), this.destinationPath('src', 'resources', 'pack_icon.png'));
+
+    this.fs.extendJSON(this.destinationPath("packs", "resources", "manifest.json"), resourceManifest);
+    this.fs.copy(this.templatePath("resource_pack_icon.png"), this.destinationPath("packs", "resources", "pack_icon.png"));
     return resourcesPack;
   }
 
@@ -120,7 +125,7 @@ module.exports = class extends Generator {
       // eslint-disable-next-line camelcase
       format_version: 1,
       header: {
-        name: this.props.addonName,
+        name: `${this.props.addonName} Behaviors`,
         description: this.props.addonDescription,
         uuid: uuidv4(),
         version: [1, 0, 0]
@@ -128,7 +133,7 @@ module.exports = class extends Generator {
       modules: [
         {
           description: `behaviours for ${this.props.addonName}`,
-          type: 'client_data',
+          type: "client_data",
           uuid: uuidv4(),
           version: [1, 0, 0]
         }
@@ -144,37 +149,54 @@ module.exports = class extends Generator {
       ];
     }
 
-    this.fs.extendJSON(this.destinationPath('src', 'behaviors', 'manifest.json'), behaviorManifest);
-    this.fs.copy(this.templatePath('behavior_pack_icon.png'), this.destinationPath('src', 'behaviors', 'pack_icon.png'));
+    this.fs.extendJSON(this.destinationPath("packs", "behaviors", "manifest.json"), behaviorManifest);
+    this.fs.copy(this.templatePath("behavior_pack_icon.png"), this.destinationPath("packs", "behaviors", "pack_icon.png"));
   }
 
   _extendForTypeScript() {
     const typeScriptPkgAdditions = {
       devDependencies: {
-        'minecraft-scripting-types-client': '^0.2.0',
-        'minecraft-scripting-types-server': '^0.2.0',
-        // eslint-disable-next-line prettier/prettier
-        'typescript': '^3.1.3',
-        'gulp-typescript': '^5.0.0-alpha.3'
+        "minecraft-scripting-types-client": typescriptTypesVersion,
+        "minecraft-scripting-types-server": typescriptTypesVersion,
+        "minecraft-addon-toolchain-typescript": toolchainTypeScriptVersion
       }
     };
 
-    this.fs.extendJSON(this.destinationPath('package.json'), typeScriptPkgAdditions);
-
-    this.fs.copy(this.templatePath('typescript', 'clientScript.ts'), this.destinationPath('src', 'scripts', 'client', 'client.ts'));
-    this.fs.copy(this.templatePath('typescript', 'serverScript.ts'), this.destinationPath('src', 'scripts', 'server', 'server.ts'));
-    this.fs.copy(this.templatePath('typescript', 'tsconfig.json'), this.destinationPath('tsconfig.json'));
-    this.fs.copyTpl(this.templatePath('typescript', 'gulpfile.js'), this.destinationPath('gulpfile.js'), {
-      addonName: this.props.addonName
-    });
+    this.fs.extendJSON(this.destinationPath("package.json"), typeScriptPkgAdditions);
+    const templateVars = {
+      addonName: this.props.addonName,
+      addonNamespace: this.props.addonNamespace
+    };
+    this.fs.copyTpl(
+      this.templatePath("typescript", "clientScript.ts"),
+      this.destinationPath("packs", "behaviors", "scripts", "client", "client.ts"),
+      templateVars
+    );
+    this.fs.copyTpl(
+      this.templatePath("typescript", "serverScript.ts"),
+      this.destinationPath("packs", "behaviors", "scripts", "server", "server.ts"),
+      templateVars
+    );
+    this.fs.copyTpl(this.templatePath("typescript", "tsconfig.json"), this.destinationPath("tsconfig.json"), templateVars);
+    this.fs.copyTpl(this.templatePath("typescript", "gulpfile.js"), this.destinationPath("gulpfile.js"), templateVars);
   }
 
   _extendForJavaScript() {
-    this.fs.copy(this.templatePath('javascript', 'clientScript.js'), this.destinationPath('src', 'scripts', 'client', 'client.js'));
-    this.fs.copy(this.templatePath('javascript', 'serverScript.js'), this.destinationPath('src', 'scripts', 'server', 'server.js'));
-    this.fs.copyTpl(this.templatePath('javascript', 'gulpfile.js'), this.destinationPath('gulpfile.js'), {
-      addonName: this.props.addonName
-    });
+    const templateVars = {
+      addonName: this.props.addonName,
+      addonNamespace: this.props.addonNamespace
+    };
+    this.fs.copyTpl(
+      this.templatePath("javascript", "clientScript.js"),
+      this.destinationPath("packs", "behaviors", "scripts", "client", "client.js"),
+      templateVars
+    );
+    this.fs.copyTpl(
+      this.templatePath("javascript", "serverScript.js"),
+      this.destinationPath("packs", "behaviors", "scripts", "server", "server.js"),
+      templateVars
+    );
+    this.fs.copyTpl(this.templatePath("javascript", "gulpfile.js"), this.destinationPath("gulpfile.js"), templateVars);
   }
 
   install() {
