@@ -62,15 +62,36 @@ module.exports = class extends Generator {
         build: "gulp build",
         watch: "gulp watch",
         installaddon: "gulp install",
-        uninstalladdon: "gulp uninstall"
+        uninstalladdon: "gulp uninstall",
+        packageaddon: "gulp package"
       },
       devDependencies: {
-        "minecraft-addon-toolchain": toolchainVersion,
-        "minecraft-addon-toolchain-browserify": toolchainBrowserifyVersion
+        "minecraft-addon-toolchain": toolchainVersion
       }
     };
 
     this.fs.extendJSON(this.destinationPath("package.json"), basePkgJson);
+
+    const templateVars = {
+      addonName: this.props.addonName,
+      addonNamespace: this.props.addonNamespace,
+      useBrowserify: this.props.hasScripts,
+      useTypescript: this.props.hasScripts && this.props.scriptLanguage.find(r => r === "TypeScript")
+    };
+
+    // Toolchain
+
+    this.fs.copyTpl(this.templatePath("gulpfile.js"), this.destinationPath("gulpfile.js"), templateVars);
+
+    if (templateVars.useBrowserify) {
+      this.fs.extendJSON(this.destinationPath("package.json"), {
+        devDependencies: {
+          "minecraft-addon-toolchain-browserify": toolchainBrowserifyVersion
+        }
+      });
+    }
+
+    // The packs
 
     let resourcePack;
     if (this.props.addonModules.find(r => r === "Resources")) {
@@ -81,11 +102,13 @@ module.exports = class extends Generator {
       this._createBehaviourPack(resourcePack);
     }
 
+    // Scripts
+
     if (this.props.hasScripts) {
-      if (this.props.scriptLanguage.find(r => r === "TypeScript")) {
-        this._extendForTypeScript();
+      if (templateVars.useTypescript) {
+        this._extendForTypeScript(templateVars);
       } else {
-        this._extendForJavaScript();
+        this._extendForJavaScript(templateVars);
       }
     }
   }
@@ -133,7 +156,7 @@ module.exports = class extends Generator {
       modules: [
         {
           description: `behaviours for ${this.props.addonName}`,
-          type: "client_data",
+          type: this.props.hasScripts ? "client_data" : "data",
           uuid: uuidv4(),
           version: [1, 0, 0]
         }
@@ -153,7 +176,7 @@ module.exports = class extends Generator {
     this.fs.copy(this.templatePath("behavior_pack_icon.png"), this.destinationPath("packs", "behaviors", "pack_icon.png"));
   }
 
-  _extendForTypeScript() {
+  _extendForTypeScript(templateVars) {
     const typeScriptPkgAdditions = {
       devDependencies: {
         "minecraft-scripting-types-client": typescriptTypesVersion,
@@ -161,12 +184,8 @@ module.exports = class extends Generator {
         "minecraft-addon-toolchain-typescript": toolchainTypeScriptVersion
       }
     };
-
     this.fs.extendJSON(this.destinationPath("package.json"), typeScriptPkgAdditions);
-    const templateVars = {
-      addonName: this.props.addonName,
-      addonNamespace: this.props.addonNamespace
-    };
+
     this.fs.copyTpl(
       this.templatePath("typescript", "clientScript.ts"),
       this.destinationPath("packs", "behaviors", "scripts", "client", "client.ts"),
@@ -178,14 +197,9 @@ module.exports = class extends Generator {
       templateVars
     );
     this.fs.copyTpl(this.templatePath("typescript", "tsconfig.json"), this.destinationPath("tsconfig.json"), templateVars);
-    this.fs.copyTpl(this.templatePath("typescript", "gulpfile.js"), this.destinationPath("gulpfile.js"), templateVars);
   }
 
-  _extendForJavaScript() {
-    const templateVars = {
-      addonName: this.props.addonName,
-      addonNamespace: this.props.addonNamespace
-    };
+  _extendForJavaScript(templateVars) {
     this.fs.copyTpl(
       this.templatePath("javascript", "clientScript.js"),
       this.destinationPath("packs", "behaviors", "scripts", "client", "client.js"),
@@ -196,7 +210,6 @@ module.exports = class extends Generator {
       this.destinationPath("packs", "behaviors", "scripts", "server", "server.js"),
       templateVars
     );
-    this.fs.copyTpl(this.templatePath("javascript", "gulpfile.js"), this.destinationPath("gulpfile.js"), templateVars);
   }
 
   install() {
