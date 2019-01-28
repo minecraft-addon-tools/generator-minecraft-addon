@@ -4,9 +4,9 @@ const chalk = require("chalk");
 const yosay = require("yosay");
 const uuidv4 = require("uuid/v4");
 
-const toolchainVersion = "^1.0.0-alpha.3";
-const toolchainTypeScriptVersion = "^1.0.0-alpha.3";
-const toolchainBrowserifyVersion = "^1.0.0-alpha.3";
+const toolchainVersion = "^1.0.0-beta.1";
+const toolchainTypeScriptVersion = "^1.0.0-beta.1";
+const toolchainBrowserifyVersion = "^1.0.0-beta.1";
 const typescriptTypesVersion = "^0.2.0";
 module.exports = class extends Generator {
   async prompting() {
