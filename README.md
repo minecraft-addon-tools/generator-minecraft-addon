@@ -27,6 +27,7 @@ yo minecraft-addon
 
 MIT © [Steven Blom](http://github.com/AtomicBlom)
 
+The Default Pack icon was created by Adrian Akison (https://www.akison.com/) and is released under [CC-BY-3.0-AU](https://creativecommons.org/licenses/by/3.0/au/)
 
 [npm-image]: https://badge.fury.io/js/generator-minecraft-addon.svg
 [npm-url]: https://npmjs.org/package/generator-minecraft-addon
