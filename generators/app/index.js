@@ -48,6 +48,12 @@ module.exports = class extends Generator {
         message: "What language do you want to script in?",
         when: response => response.hasScripts,
         choices: ["JavaScript", "TypeScript"]
+      },
+      {
+        type: "confirm",
+        name: "hasUi",
+        message: "Do you want to add custom UI?",
+        when: response => response.hasScripts && response.addonModules.find(r => r === "Resources")
       }
     ]);
   }
@@ -75,6 +81,7 @@ module.exports = class extends Generator {
     const templateVars = {
       addonName: this.props.addonName,
       addonNamespace: this.props.addonNamespace,
+      hasUi: this.props.hasUi,
       useBrowserify: this.props.hasScripts,
       useTypescript: this.props.hasScripts && this.props.scriptLanguage.find(r => r === "TypeScript")
     };
@@ -111,6 +118,12 @@ module.exports = class extends Generator {
         this._extendForJavaScript(templateVars);
       }
     }
+
+    // Ui
+
+    if (this.props.hasUi) {
+      this._extendForCustomUi(templateVars);
+    }
   }
 
   _createResourcePack() {
@@ -137,6 +150,10 @@ module.exports = class extends Generator {
         }
       ]
     };
+
+    if (this.props.hasUi) {
+      resourceManifest.capabilities = ["experimental_custom_ui"];
+    }
 
     this.fs.extendJSON(this.destinationPath("packs", "resources", "manifest.json"), resourceManifest);
     this.fs.copy(this.templatePath("resource_pack_icon.png"), this.destinationPath("packs", "resources", "pack_icon.png"));
@@ -210,6 +227,13 @@ module.exports = class extends Generator {
       this.destinationPath("packs", "behaviors", "scripts", "server", "server.js"),
       templateVars
     );
+  }
+
+  _extendForCustomUi(templateVars) {
+    this.fs.copy(this.templatePath("ui", "fonts"), this.destinationPath("packs", "resources", "experimental_ui", "fonts"));
+
+    this.fs.copyTpl(this.templatePath("ui", "style.css"), this.destinationPath("packs", "resources", "experimental_ui", "style.css"), templateVars);
+    this.fs.copyTpl(this.templatePath("ui", "index.html"), this.destinationPath("packs", "resources", "experimental_ui", "index.html"), templateVars);
   }
 
   install() {
