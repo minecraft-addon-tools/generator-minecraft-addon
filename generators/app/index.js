@@ -48,6 +48,25 @@ module.exports = class extends Generator {
         message: "What language do you want to script in?",
         when: response => response.hasScripts,
         choices: ["JavaScript", "TypeScript"]
+      },
+      //choose which script template to use
+      //the choice value must be the name of a directory underneath the script language directory
+      //ex: choosing "JavaScript" and "example-pinky" will use the scripts in "javascript/example-pinky" directory
+      {
+        type: "list",
+        name: "scriptType",
+        message: "What initial scripts do you want generated?",
+        when: response => response.hasScripts,
+        choices: [
+          {
+            name: "An Example Client/Server Event Script",
+            value: "example-pinky"
+          },
+          {
+            name: "A Boilerplate Script Template",
+            value: "boilerplate"
+          }
+        ]
       }
     ]);
   }
@@ -187,12 +206,12 @@ module.exports = class extends Generator {
     this.fs.extendJSON(this.destinationPath("package.json"), typeScriptPkgAdditions);
 
     this.fs.copyTpl(
-      this.templatePath("typescript", "clientScript.ts"),
+      this.templatePath("typescript", this.props.scriptType, "clientScript.ts"),
       this.destinationPath("packs", "behaviors", "scripts", "client", "client.ts"),
       templateVars
     );
     this.fs.copyTpl(
-      this.templatePath("typescript", "serverScript.ts"),
+      this.templatePath("typescript", this.props.scriptType, "serverScript.ts"),
       this.destinationPath("packs", "behaviors", "scripts", "server", "server.ts"),
       templateVars
     );
@@ -201,12 +220,12 @@ module.exports = class extends Generator {
 
   _extendForJavaScript(templateVars) {
     this.fs.copyTpl(
-      this.templatePath("javascript", "clientScript.js"),
+      this.templatePath("javascript", this.props.scriptType, "clientScript.js"),
       this.destinationPath("packs", "behaviors", "scripts", "client", "client.js"),
       templateVars
     );
     this.fs.copyTpl(
-      this.templatePath("javascript", "serverScript.js"),
+      this.templatePath("javascript", this.props.scriptType, "serverScript.js"),
       this.destinationPath("packs", "behaviors", "scripts", "server", "server.js"),
       templateVars
     );
