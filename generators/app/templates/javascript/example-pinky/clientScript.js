@@ -2,10 +2,11 @@ var clientSystem = client.registerSystem(0, 0);
 
 // Setup which events to listen for
 clientSystem.initialize = function () {
+    // define an example event to send to the server, this describes the shape and defaults of the event.
+    const eventDataDefaults = {narf: false}
+    clientSystem.registerEventData("<%= addonNamespace %>:pinky", eventDataDefaults)
+    
     // set up your listenToEvents and register client-side components here.
-
-    //register the custom pinky event
-    clientSystem.registerEventData("<%= addonNamespace %>:pinky", { narf: null });
 }
 
 let firstTick = true;
@@ -21,9 +22,9 @@ clientSystem.update = function() {
 
         clientSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
 
-        //set up pink event data object
+        // You must create the event data this way and then set your properties before you broadcast
         let pinkyEventData = clientSystem.createEventData("<%= addonNamespace %>:pinky");
-        pinkyEventData.narf = false;
+        pinkyEventData.data.narf = true;
 
         clientSystem.broadcastEvent("<%= addonNamespace %>:pinky", pinkyEventData);
     }
