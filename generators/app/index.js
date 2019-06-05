@@ -4,10 +4,10 @@ const chalk = require("chalk");
 const yosay = require("yosay");
 const uuidv4 = require("uuid/v4");
 
-const toolchainVersion = "^1.0.1";
-const toolchainTypeScriptVersion = "^1.0.1";
-const toolchainBrowserifyVersion = "^1.0.1";
-const typescriptTypesVersion = "^1.0.0-alpha.2";
+const toolchainVersion = "^1.0.3";
+const toolchainTypeScriptVersion = "^1.0.3";
+const toolchainBrowserifyVersion = "^1.0.3";
+const typescriptTypesVersion = "^1.0.0";
 
 module.exports = class extends Generator {
 	async prompting() {
@@ -50,9 +50,9 @@ module.exports = class extends Generator {
 				when: response => response.hasScripts,
 				choices: ["JavaScript", "TypeScript"]
 			},
-			//choose which script template to use
-			//the choice value must be the name of a directory underneath the script language directory
-			//ex: choosing "JavaScript" and "example-pinky" will use the scripts in "javascript/example-pinky" directory
+			// Choose which script template to use
+			// the choice value must be the name of a directory underneath the script language directory
+			// ex: choosing "JavaScript" and "example-pinky" will use the scripts in "javascript/example-pinky" directory
 			{
 				type: "list",
 				name: "scriptType",

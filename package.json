@@ -1,6 +1,6 @@
 {
   "name": "generator-minecraft-addon",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Generate minecraft bedrock edition addons",
   "homepage": "http://github.com/minecraft-scripting-tools/generator-minecraft-addon#readme",
   "repository": "github:minecraft-scripting-tools/generator-minecraft-addon",

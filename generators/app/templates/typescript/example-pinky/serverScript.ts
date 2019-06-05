@@ -29,9 +29,11 @@ namespace Server {
 		// Any logic that needs to happen every tick on the server.
 	}
 
-	function receivePinkyMessage(parameters: {narf: boolean}) {
-		if (parameters.narf) {
-			system.broadcastEvent(SendToMinecraftServer.DisplayChat, "The same thing we do every night Client. TRY TO TAKE OVER THE WORLD.");
+	function receivePinkyMessage(parameters: IEventData<{narf: boolean}>) {
+		if (parameters.data.narf) {
+			var displayChatEvent = system.createEventData(SendToMinecraftServer.DisplayChat);
+			displayChatEvent.data.message = "The same thing we do every night Client. TRY TO TAKE OVER THE WORLD.";
+			system.broadcastEvent(SendToMinecraftServer.DisplayChat, displayChatEvent);
 		}
 	}
 }
