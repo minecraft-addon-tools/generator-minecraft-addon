@@ -1,4 +1,5 @@
 const MinecraftAddonBuilder = require("minecraft-addon-toolchain/v1");
+const JSONValidator = require("minecraft-addon-toolchain-jsonvalidator");
 <%_ if (useTypescript) { -%>
 const TypeScriptSupport = require("minecraft-addon-toolchain-typescript");
 <%_ } -%>
@@ -7,6 +8,7 @@ const BrowserifySupport = require("minecraft-addon-toolchain-browserify");
 <%_ } -%>
 
 const builder = new MinecraftAddonBuilder("<%= addonName %>");
+builder.addPlugin(new JSONValidator());
 <%_ if (useTypescript) { -%>
 builder.addPlugin(new TypeScriptSupport());
 <%_ } -%>
