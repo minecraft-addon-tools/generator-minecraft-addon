@@ -8,6 +8,7 @@ const toolchainVersion = "^1.0.3";
 const toolchainTypeScriptVersion = "^1.0.3";
 const toolchainBrowserifyVersion = "^1.0.3";
 const typescriptTypesVersion = "^1.0.0";
+const toolchainJsonValidateVersion = "^1.0.0";
 
 module.exports = class extends Generator {
 	async prompting() {
@@ -86,7 +87,8 @@ module.exports = class extends Generator {
 				packageaddon: "gulp package"
 			},
 			devDependencies: {
-				"minecraft-addon-toolchain": toolchainVersion
+				"minecraft-addon-toolchain": toolchainVersion,
+				"minecraft-addon-toolchain-jsonvalidator": toolchainJsonValidateVersion
 			}
 		};
 
