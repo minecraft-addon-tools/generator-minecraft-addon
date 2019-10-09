@@ -35,7 +35,11 @@ module.exports = class extends Generator {
 				type: "checkbox",
 				name: "addonModules",
 				message: "What kind of modules will make up the addon?",
-				choices: ["Behaviors", "Resources"]
+				choices: ["Behaviors", "Resources"],
+				validate: userInput => {
+					// Require a choice
+					return userInput.length === 0 ? "Please choose at least one module" : true;
+				}
 			},
 			{
 				type: "confirm",
