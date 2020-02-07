@@ -119,7 +119,7 @@ module.exports = class extends Generator {
 		}
 
 		if (this.props.addonModules.find(r => r === "Behaviors")) {
-			this._createBehaviourPack(resourcePack);
+			this._createBehaviorPack(resourcePack);
 		}
 
 		// Scripts
@@ -163,7 +163,7 @@ module.exports = class extends Generator {
 		return resourcesPack;
 	}
 
-	_createBehaviourPack(resourcePack) {
+	_createBehaviorPack(resourcePack) {
 		const behaviorManifest = {
 			// eslint-disable-next-line camelcase
 			format_version: 1,
@@ -175,7 +175,7 @@ module.exports = class extends Generator {
 			},
 			modules: [
 				{
-					description: `behaviours for ${this.props.addonName}`,
+					description: `Behaviors for ${this.props.addonName}`,
 					type: this.props.hasScripts ? "client_data" : "data",
 					uuid: uuidv4(),
 					version: [1, 0, 0]
