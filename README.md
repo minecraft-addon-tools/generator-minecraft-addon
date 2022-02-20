@@ -1,6 +1,10 @@
 # generator-minecraft-addon [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 > Generate minecraft bedrock edition addons
 
+## Notice
+
+Mojang has deprecated the bedrock scripting API in favour of the GameTest API. This repository has been archived as a a result.
+
 ## Installation
 
 First, install [Yeoman](http://yeoman.io) and generator-minecraft-addon using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
